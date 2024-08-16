@@ -15,7 +15,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-db.on("error", (error) => console.log(error));
+db.on("error", (error) => console.error(error));
 db.once("open", () => console.log("connected to Database"));
 
 app.post("/upload", upload.single("image"), (req, res) => {
