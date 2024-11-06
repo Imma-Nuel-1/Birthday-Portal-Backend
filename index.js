@@ -11,16 +11,19 @@ const db = require("./db");
 dotenv.config();
 
 const app = express();
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Database Connection
 db.on("error", (error) => console.error(error));
 db.once("open", () => console.log("connected to Database"));
 
+// Post Routes
 app.post("/upload", upload.single("image"), (req, res) => {
   console.log(req.file);
-
   res.status(200).send({
     status: "success",
     message: "Image uploaded successfully",
@@ -81,6 +84,15 @@ app.get("/post/:id", async (req, res) => {
   }
 });
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`);
+// Auth and Post Routes from the second snippet
+const authRoutes = require("./routes/auth");
+const postRoutes = require("./routes/posts");
+
+app.use("/api/auth", authRoutes);
+app.use("/api/posts", postRoutes);
+
+// Server setup
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
