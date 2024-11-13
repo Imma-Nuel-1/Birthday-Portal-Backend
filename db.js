@@ -1,46 +1,8 @@
-// const mongoose = require("mongoose");
-// require("dotenv").config();
+const dotenv = require("dotenv"); //importing dotenv after installation
+const mongoose = require("mongoose"); //importing mongoose
+dotenv.config(); //importing dotenv because that where our connection string from mongoose is
 
-// // Connect to MongoDB with additional options
-// mongoose.connect(process.env.MONGO_URL, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// });
-
-// // Get the database connection instance
-// const db = mongoose.connection;
-
-// // Handle connection errors
-// db.on("error", console.error.bind(console, "connection error:"));
-
-// // Log a message once connected
-// db.once("open", () => console.log("Connected to MongoDB"));
-
-// module.exports = db;
-
-const mongoose = require("mongoose");
-require("dotenv").config();
-
-// Log the MongoDB URL for debugging
-console.log("MongoDB URL:", process.env.MONGO_URL);
-
-// Connect to MongoDB without deprecated options
-mongoose
-  .connect(process.env.MONGO_URL)
-  .then(() => {
-    console.log("Connected to MongoDB");
-  })
-  .catch((error) => {
-    console.error("MongoDB connection error:", error);
-  });
-
-// Get the database connection instance
+mongoose.connect(process.env.MONGODB_CONNECTION_STRING); //importing and connecting to mongoose from .env file
 const db = mongoose.connection;
-
-// Handle connection errors
-db.on("error", console.error.bind(console, "connection error:"));
-
-// Log a message once connected
-db.once("open", () => console.log("Database connection is open"));
 
 module.exports = db;
