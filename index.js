@@ -109,7 +109,7 @@ const Post = require("./model/postModel");
 const authRoute = require("./auth/authRoute");
 const db = require("./db");
 
-const { verifyToken, isUser, isAdmin } = require("./auth/authMiddleware");
+const { verifyToken, isUser, authenticateUser } = require("./auth/authMiddleware");
 
 dotenv.config();
 
@@ -133,11 +133,10 @@ app.post("/upload", upload.single("image"), (req, res) => {
   });
 });
 
-app.post("/create-post", verifyToken, async (req, res) => {
+app.post("/create-post", async (req, res) => {
   // Ensure the post includes the user's email
-  const body = { ...req.body, email: req.email };
   try {
-    const post = new Post(body);
+    const post = new Post(req.body);
     await post.save();
     res.status(200).send({
       status: "success",
@@ -145,6 +144,7 @@ app.post("/create-post", verifyToken, async (req, res) => {
       data: post,
     });
   } catch (error) {
+    console.log(error)
     res.status(500).send({
       status: "error",
       message: "Error creating post",
@@ -153,15 +153,15 @@ app.post("/create-post", verifyToken, async (req, res) => {
   }
 });
 
-app.get("/posts", verifyToken, async (req, res) => {
+app.get("/posts", authenticateUser, async (req, res) => {
   try {
     let posts;
-    if (req.email === "adesanyaoluwamuyiwa12@gmail.com") {
+    if (req.userEmail === "adesanyaoluwamuyiwa12@gmail.com") {
       // Admin sees all posts
       posts = await Post.find();
     } else {
       // Regular users see only their posts
-      posts = await Post.find({ email: req.email });
+      posts = await Post.find({ email: req.userEmail });
     }
     res.status(200).send({
       count: posts.length,

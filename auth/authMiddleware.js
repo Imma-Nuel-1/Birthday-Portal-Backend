@@ -48,3 +48,23 @@ exports.isAdmin = (req, res, next) => {
   next();
 };
 
+
+exports.authenticateUser = async (req, res, next) => {
+  try {
+    // Get email from request headers, token, or session
+    const email = req.headers['user-email'] || req.query.email;
+    if (!email) {
+      return res.status(401).json({
+        status: "error",
+        message: "Authentication required"
+      });
+    }
+    req.userEmail = email; // Attach to request object
+    next();
+  } catch (error) {
+    res.status(401).json({
+      status: "error",
+      message: "Authentication failed"
+    });
+  }
+};
