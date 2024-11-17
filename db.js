@@ -1,12 +1,8 @@
-const mongoose = require("mongoose");
-require("dotenv").config();
-mongoose.connect(
-  "mongodb+srv://adesanyaoluwamuyiwa12:Emmanuel_2002@school-app.kg4jigw.mongodb.net/?retryWrites=true&w=majority",
-  {
-    useNewUrlParser: true,
-  }
-);
-console.log(process.env.MONGODB_CONNECTION_STRING);
+const dotenv = require("dotenv"); //importing dotenv after installation
+const mongoose = require("mongoose"); //importing mongoose
+dotenv.config(); //importing dotenv because that where our connection string from mongoose is
+
+mongoose.connect(process.env.MONGODB_CONNECTION_STRING); //importing and connecting to mongoose from .env file
 const db = mongoose.connection;
 
 module.exports = db;
